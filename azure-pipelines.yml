@@ -1,0 +1,71 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+
+variables:
+  shouldDeploy: ${{eq(variables['Build.SourceBranch'], 'refs/heads/master')}}
+  projectPath: path/to/project
+  buildName: NameOfMyGame
+
+stages:
+- stage: "WindowsOS_Win"
+  dependsOn: []
+  pool:
+    name: Default
+    demands:
+    - Agent.OS -equals Windows_NT
+  jobs:
+  - job: Job_Unity
+    displayName: "Test, Build, Deploy"
+    timeoutInMinutes: 180
+    steps:
+      - template: Git/Task_Clean.yaml
+      - template: Git/Task_Reset.yaml
+      - checkout: self
+        clean: false
+        lfs: true
+        fetchDepth: 0
+        persistCredentials: true
+      - template: Unity/Tasks_SetupTestBuild.yaml
+        parameters:
+          os: win
+          projectPath: ${{variables.projectPath}}
+          shouldTest: true
+          shouldBuild: true
+          buildTarget: Win64
+          buildOutputPath: $(Build.ArtifactStagingDirectory)
+          buildName: ${{variables.buildName}}
+          modules:
+            - windows-il2cpp
+            
+- stage: "WindowsOS_Mac"
+  dependsOn: []
+  pool:
+    name: Default
+    demands:
+    - Agent.OS -equals Darwin
+  jobs:
+  - job: Job_Unity
+    displayName: "Test, Build, Deploy"
+    timeoutInMinutes: 180
+    steps:
+      - template: Git/Task_Clean.yaml
+      - template: Git/Task_Reset.yaml
+      - checkout: self
+        clean: false
+        lfs: true
+        fetchDepth: 0
+        persistCredentials: true
+      - template: Unity/Tasks_SetupTestBuild.yaml
+        parameters:
+          os: mac
+          projectPath: ${{variables.projectPath}}
+          shouldTest: true
+          shouldBuild: true
+          buildTarget: OSXUniversal
+          buildOutputPath: $(Build.ArtifactStagingDirectory)
+          buildName: ${{variables.buildName}}
+          modules:
+            - mac-il2cpp

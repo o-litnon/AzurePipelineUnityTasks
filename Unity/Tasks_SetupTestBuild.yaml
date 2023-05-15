@@ -1,0 +1,52 @@
+parameters:
+  - name: projectPath
+    type: string
+  - name: buildOutputPath
+    type: string
+  - name: buildName
+    type: string
+    default: drop
+  - name: shouldTest
+    type: boolean
+    default: true
+  - name: shouldBuild
+    type: boolean
+    default: true
+  - name: buildTarget
+    type: string
+    default: Win64
+  - name: modules
+    type: object
+    default: []
+  - name: os
+    type: string
+    default: win
+
+steps:
+  - template: Task_GetProjectVersion.yaml
+    parameters:
+      unityProjectPath: ${{parameters.projectPath}}
+  - template: Task_HubInstallEditor.yaml
+    parameters:
+      unityVersion: $(projectVersion)
+      unityVersionRevision: $(projectVersionRevision)
+      os: ${{parameters.os}}
+      modules: ${{parameters.modules}}
+  - ${{ if parameters.shouldTest }}:
+    - template: Task_EditorTest.yaml
+      parameters:
+        unityVersion: $(projectVersion)
+        os: ${{parameters.os}}
+        unityProjectPath: ${{parameters.projectPath}}
+  - ${{ if parameters.shouldBuild }}:
+    - template: Task_EditorBuildScript.yaml
+      parameters:
+        unityProjectPath: ${{parameters.projectPath}}
+        outputPath: ${{parameters.buildOutputPath}}
+        outputFileName: ${{parameters.buildName}}
+    - template: Task_EditorBuild.yaml
+      parameters:
+        os: ${{parameters.os}}
+        unityVersion: $(projectVersion)
+        unityProjectPath: ${{parameters.projectPath}}
+        buildTarget: ${{parameters.buildTarget}}

@@ -1,0 +1,45 @@
+parameters:
+  - name: unityProjectPath
+    type: string
+    default: null
+
+steps:
+- task: PowerShell@2
+  displayName: 'Unity Get Project Version'
+  inputs:
+    targetType: 'inline'
+    script: |
+      if ("${{parameters.unityProjectPath}}" -eq "null") {
+        $projectPath = "$(Build.SourcesDirectory)/ProjectSettings/ProjectVersion.txt"
+      }
+      else {
+        $projectPath = "$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}/ProjectSettings/ProjectVersion.txt"
+      }
+
+      Write-Host "Project Path: $projectPath"
+
+      # Read the ProjectVersion.txt file.
+      $versionContent = Get-Content -Path $projectPath -Raw
+
+      # Parse the Unity editor version and revision from the file content.
+      $unityVersion = [regex]::Match($versionContent, '(?<=m_EditorVersion:\s).*').Value.Trim()
+      $unityRevision = [regex]::Match($versionContent, '(?<=m_EditorVersionWithRevision:\s.*\()\w+(?=\))').Value.Trim()
+
+      if ([string]::IsNullOrEmpty($unityVersion)) {
+        $errorMessage = "Failed to extract Unity editor version from ProjectVersion.txt file."
+        Write-Error $errorMessage
+        throw $errorMessage
+      }
+
+      # Log findings.
+      $successLog = "Unity Editor Version: $unityVersion"
+      Write-Host $successLog
+
+      # Set output variable values.
+      Write-Host "##vso[task.setvariable variable=projectVersion]$unityVersion"
+      if (-not [string]::IsNullOrEmpty($unityRevision)) {
+        Write-Host "##vso[task.setvariable variable=projectVersionRevision]$unityRevision"
+      }
+
+      # Set task result as succeeded.
+      Write-Host "##vso[task.complete result=Succeeded]$successLog"

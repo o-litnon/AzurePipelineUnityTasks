@@ -1,0 +1,5 @@
+steps:
+  - script: |
+      git clean -fd
+    displayName: Git Clean
+    continueOnError: true

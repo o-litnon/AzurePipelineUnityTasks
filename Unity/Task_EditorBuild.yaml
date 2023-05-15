@@ -1,0 +1,29 @@
+parameters:
+  - name: displayName
+    type: string
+    default: "Unity Build"
+  - name: unityVersion
+    type: string
+  - name: unityProjectPath
+    type: string
+    default: null
+  - name: os
+    type: string
+    default: win
+  - name: buildTarget
+    type: string
+    default: Win64
+  - name: inlineBuildScript
+    type: string
+    default: "AzureDevOps.PerformBuild"
+
+steps:
+  - template: Task_EditorCmd.yaml
+    parameters:
+      displayName: ${{parameters.displayName}}
+      os: ${{parameters.os}}
+      unityVersion: ${{parameters.unityVersion}}
+      ${{ if eq(parameters.unityProjectPath, 'null') }}:
+        cmdArgs: "-buildTarget ${{parameters.buildTarget}} -projectPath \"$(Build.SourcesDirectory)\" -executeMethod ${{parameters.inlineBuildScript}}"
+      ${{ else }}:
+        cmdArgs: "-buildTarget ${{parameters.buildTarget}} -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -executeMethod ${{parameters.inlineBuildScript}}"

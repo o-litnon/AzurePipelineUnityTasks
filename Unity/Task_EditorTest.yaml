@@ -1,0 +1,24 @@
+parameters:
+  - name: displayName
+    type: string
+    default: "Unity Test"
+  - name: unityVersion
+    type: string
+  - name: unityProjectPath
+    type: string
+    default: null
+  - name: os
+    type: string
+    default: win
+
+steps:
+  - template: Task_EditorCmd.yaml
+    parameters:
+      displayName: ${{parameters.displayName}}
+      os: ${{parameters.os}}
+      unityVersion: ${{parameters.unityVersion}}
+      ${{ if eq(parameters.unityProjectPath, 'null') }}:
+        cmdArgs: "-runTests -testPlatform EditMode -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath -noGraphics"
+      ${{ else }}:
+        cmdArgs: "-runTests -testPlatform EditMode -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath -noGraphics"
+

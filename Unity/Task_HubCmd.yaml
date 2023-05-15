@@ -1,0 +1,31 @@
+parameters:
+  - name: displayName
+    type: string
+    default: UnityHubCmd
+  - name: cmdArgs
+    type: string
+  - name: os
+    type: string
+    default: win
+
+steps:
+  - ${{ if eq(parameters.os,'win')}}:
+      - template: ../Utils/Task_PwshExecute.yaml
+        parameters:
+          displayName: ${{parameters.displayName}}
+          cmdPath: 'C:\Program Files\Unity Hub\Unity Hub.exe'
+          cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
+  - ${{ elseif eq(parameters.os,'mac') }}:
+      - template: ../Utils/Task_PwshExecute.yaml
+        parameters:
+          displayName: ${{parameters.displayName}}
+          cmdPath: "/Applications/Unity Hub.app/Contents/MacOS/Unity Hub"
+          cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
+  - ${{ else }}:
+      - task: PowerShell@2
+        displayName: ${{parameters.displayName}}
+        inputs:
+          targetType: "inline"
+          script: |
+            Write-Host "Unsupported os: ${{parameters.os}}"
+            exit 1

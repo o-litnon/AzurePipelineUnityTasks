@@ -1,0 +1,50 @@
+parameters:
+  - name: displayName
+    type: string
+    default: UnityHubCmd
+  - name: cmdPath
+    type: string
+  - name: cmdArgs
+    type: string
+
+steps:
+  - task: PowerShell@2
+    displayName: ${{parameters.displayName}}
+    inputs:
+      targetType: "inline"
+      script: |
+        $filePath = '${{parameters.cmdPath}}'
+        $arguments = '${{parameters.cmdArgs}}'
+        $fileExtension = [System.IO.Path]::GetExtension($filePath)
+
+        if ($fileExtension -eq '' -or $fileExtension -eq '.app' -or $fileExtension -eq '.sh') {
+          Write-Host "Executing UNIX script: $filePath $arguments"
+
+          & '/bin/bash' '-c' "`"$filePath`" $arguments" | Write-Host
+        }
+        elseif ($fileExtension -eq '.exe') {
+          $processInfo = New-Object System.Diagnostics.ProcessStartInfo
+          $processInfo.FileName = $filePath
+          $processInfo.Arguments = $arguments
+          $processInfo.RedirectStandardOutput = $true
+          $processInfo.UseShellExecute = $false
+
+          $process = New-Object System.Diagnostics.Process
+          $process.StartInfo = $processInfo
+          $process.Start() | Out-Null
+
+          while (!$process.StandardOutput.EndOfStream) {
+              $outputLine = $process.StandardOutput.ReadLine()
+              Write-Host $outputLine
+          }
+
+          $process.WaitForExit()
+          $exitCode = $process.ExitCode
+          $process.Close()
+
+          Write-Host "Process exited with code: $exitCode"
+        }
+        else {
+          Write-Host "Unsupported file extension: $fileExtension"
+          exit 1
+        }

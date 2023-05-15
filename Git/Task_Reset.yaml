@@ -1,0 +1,5 @@
+steps:
+  - script: |
+      git reset --hard
+    displayName: Git Reset
+    continueOnError: true

@@ -1,0 +1,17 @@
+parameters:
+  - name: mergeFromBranch
+    type: string
+    default: null
+  - name: email
+    type: string
+    default: pipeline@polydemons.com
+
+steps:
+  - ${{ if ne(parameters.mergeFromBranch, 'null') }}:
+      - script: |
+          git config user.email "${{parameters.email}}"
+
+          git fetch origin ${{parameters.mergeFromBranch}} --prune --progress
+
+          git merge --no-commit --progress --no-verify --stat --allow-unrelated-histories origin/${{parameters.mergeFromBranch}}
+        displayName: Git Merge from '${{parameters.mergeFromBranch}}'

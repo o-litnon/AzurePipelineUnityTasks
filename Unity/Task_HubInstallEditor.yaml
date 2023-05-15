@@ -1,0 +1,27 @@
+parameters:
+  - name: displayName
+    type: string
+    default: "Unity Install Editor"
+  - name: os
+    type: string
+    default: win
+  - name: unityVersion
+    type: string
+  - name: unityVersionRevision
+    type: string
+  - name: modules
+    type: object
+    default: []
+
+steps:
+  - template: Task_HubCmd.yaml
+    parameters:
+      displayName: ${{parameters.displayName}}
+      os: ${{parameters.os}}
+      cmdArgs: "install --version ${{parameters.unityVersion}} --changeset ${{parameters.unityVersionRevision}}"
+  - ${{ each module in parameters.modules }}:
+    - template: Task_HubCmd.yaml
+      parameters:
+        displayName: "${{parameters.displayName}} - ${{module}}"
+        os: ${{parameters.os}}
+        cmdArgs: "install-modules --version ${{parameters.unityVersion}} --childModules --module ${{module}}"

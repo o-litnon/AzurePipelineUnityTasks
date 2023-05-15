@@ -1,0 +1,33 @@
+parameters:
+  - name: displayName
+    type: string
+    default: UnityCmd
+  - name: unityVersion
+    type: string
+  - name: cmdArgs
+    type: string
+  - name: os
+    type: string
+    default: "win"
+
+steps:
+  - ${{ if eq(parameters.os,'win')}}:
+      - template: ../Utils/Task_PwshExecute.yaml
+        parameters:
+          displayName: ${{parameters.displayName}}
+          cmdPath: "C:/Program Files/Unity/Hub/Editor/${{parameters.unityVersion}}/Editor/Unity.exe"
+          cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"
+  - ${{ elseif eq(parameters.os,'mac') }}:
+      - template: ../Utils/Task_PwshExecute.yaml
+        parameters:
+          displayName: ${{parameters.displayName}}
+          cmdPath: "/Applications/Unity/Hub/Editor/${{parameters.unityVersion}}/Unity.app/Contents/MacOS/Unity"
+          cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"
+  - ${{ else }}:
+      - task: PowerShell@2
+        displayName: ${{parameters.displayName}}
+        inputs:
+          targetType: "inline"
+          script: |
+            Write-Host "Unsupported os: ${{parameters.os}}"
+            exit 1
