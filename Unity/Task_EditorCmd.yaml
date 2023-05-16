@@ -24,10 +24,8 @@ steps:
           cmdPath: "/Applications/Unity/Hub/Editor/${{parameters.unityVersion}}/Unity.app/Contents/MacOS/Unity"
           cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"
   - ${{ else }}:
-      - task: PowerShell@2
-        displayName: ${{parameters.displayName}}
-        inputs:
-          targetType: "inline"
-          script: |
-            Write-Host "Unsupported os: ${{parameters.os}}"
-            exit 1
+      - template: ../Utils/Task_Execute.yaml
+        parameters:
+          displayName: ${{parameters.displayName}}
+          cmdPath: "/Applications/Unity/Hub/Editor/${{parameters.unityVersion}}/Unity.app/Contents/Linux/Unity"
+          cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"

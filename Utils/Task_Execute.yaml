@@ -5,27 +5,33 @@ parameters:
     type: string
   - name: cmdArgs
     type: string
+  - name: condition
+    type: string
+    default: succeeded()
 
 steps:
   - ${{ if endsWith(parameters.cmdPath, '.exe') }}:
       - task: CmdLine@2
         displayName: ${{parameters.displayName}}
+        condition: ${{parameters.condition}}
         inputs:
           script: |
             "${{parameters.cmdPath}}" ${{parameters.cmdArgs}}
   - ${{ elseif endsWith(parameters.cmdPath, '.bat') }}:
       - task: CmdLine@2
         displayName: ${{parameters.displayName}}
+        condition: ${{parameters.condition}}
         inputs:
           script: |
             "${{parameters.cmdPath}}" ${{parameters.cmdArgs}}
   - ${{ else }}:
-    - task: PowerShell@2
-      displayName: ${{parameters.displayName}}
-      inputs:
-        targetType: "inline"
-        script: |
-          $filePath = '${{parameters.cmdPath}}'
-          $arguments = '${{parameters.cmdArgs}}'          
-          Write-Host "Executing UNIX script: $filePath $arguments"
-          & '/bin/bash' '-c' "`"$filePath`" $arguments" | Write-Host
+      - task: PowerShell@2
+        displayName: ${{parameters.displayName}}
+        condition: ${{parameters.condition}}
+        inputs:
+          targetType: "inline"
+          script: |
+            $filePath = '${{parameters.cmdPath}}'
+            $arguments = '${{parameters.cmdArgs}}'          
+            Write-Host "Executing UNIX script: $filePath $arguments"
+            & '/bin/bash' '-c' "`"$filePath`" $arguments" | Write-Host

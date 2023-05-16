@@ -22,10 +22,8 @@ steps:
           cmdPath: "/Applications/Unity Hub.app/Contents/MacOS/Unity Hub"
           cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
   - ${{ else }}:
-      - task: PowerShell@2
-        displayName: ${{parameters.displayName}}
-        inputs:
-          targetType: "inline"
-          script: |
-            Write-Host "Unsupported os: ${{parameters.os}}"
-            exit 1
+      - template: ../Utils/Task_Execute.yaml
+        parameters:
+          displayName: ${{parameters.displayName}}
+          cmdPath: "/Applications/Unity Hub.app/Contents/Linux/Unity Hub"
+          cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
