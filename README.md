@@ -30,7 +30,6 @@ Step 5: Reference the remplates by using the name of the resource repository
 
 ```
 variables:
-  shouldDeploy: ${{eq(variables['Build.SourceBranch'], 'refs/heads/master')}}
   projectPath: path/to/project
   buildName: NameOfMyGame
 

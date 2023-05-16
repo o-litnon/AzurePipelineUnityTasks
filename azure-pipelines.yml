@@ -12,7 +12,6 @@ resources:
       ref: refs/heads/main
 
 variables:
-  shouldDeploy: ${{eq(variables['Build.SourceBranch'], 'refs/heads/master')}}
   projectPath: path/to/project
   buildName: NameOfMyGame
 
