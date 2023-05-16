@@ -12,13 +12,13 @@ parameters:
 
 steps:
   - ${{ if eq(parameters.os,'win')}}:
-      - template: ../Utils/Task_PwshExecute.yaml
+      - template: ../Utils/Task_Execute.yaml
         parameters:
           displayName: ${{parameters.displayName}}
           cmdPath: "C:/Program Files/Unity/Hub/Editor/${{parameters.unityVersion}}/Editor/Unity.exe"
           cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"
   - ${{ elseif eq(parameters.os,'mac') }}:
-      - template: ../Utils/Task_PwshExecute.yaml
+      - template: ../Utils/Task_Execute.yaml
         parameters:
           displayName: ${{parameters.displayName}}
           cmdPath: "/Applications/Unity/Hub/Editor/${{parameters.unityVersion}}/Unity.app/Contents/MacOS/Unity"

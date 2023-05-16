@@ -10,13 +10,13 @@ parameters:
 
 steps:
   - ${{ if eq(parameters.os,'win')}}:
-      - template: ../Utils/Task_PwshExecute.yaml
+      - template: ../Utils/Task_Execute.yaml
         parameters:
           displayName: ${{parameters.displayName}}
           cmdPath: 'C:\Program Files\Unity Hub\Unity Hub.exe'
           cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
   - ${{ elseif eq(parameters.os,'mac') }}:
-      - template: ../Utils/Task_PwshExecute.yaml
+      - template: ../Utils/Task_Execute.yaml
         parameters:
           displayName: ${{parameters.displayName}}
           cmdPath: "/Applications/Unity Hub.app/Contents/MacOS/Unity Hub"
