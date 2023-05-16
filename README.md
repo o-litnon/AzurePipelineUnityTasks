@@ -6,24 +6,28 @@ This collection of unity tasks adds CI/CD tooling for use in Azure Pipelines on 
 Example  pipeline:
 - ./azure-pipeline.yml 
 
-Step 1: Install [UnityHub](https://docs.unity3d.com/2020.1/Documentation/Manual/GettingStartedInstallingHub.html) on your build agents
+Step 1: [Clone](https://learn.microsoft.com/en-us/azure/devops/repos/git/clone) this repo into your Azure project so you can reference it easily in your pipeline. You could optionally copy the files directly into your repository and skip Step 4.
 
-Step 2: Install [powershell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell) on your build agents
+Step 2: Install [UnityHub](https://docs.unity3d.com/2020.1/Documentation/Manual/GettingStartedInstallingHub.html) on your build agents
 
-Step 3: Import this repository as a [resource](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/resources)
+Step 3: Install [powershell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell) on your build agents
+
+Step 4: Import this repository as a [resource](https://learn.microsoft.com/en-us/azure/devops/pipelines/process/resources)
 
 ```
 resources:
   repositories:
     - repository: templates
-      type: github
-      name: o-litnon/AzurePipelineUnityTasks
-      ref: refs/tags/1.0.0
+      type: git
+      name: AzurePipelineUnityTasks
+      ref: refs/heads/main
 ```
 
-Reference the remplates by using the name of the resource repository
-
+Step 5: Reference the remplates by using the name of the resource repository 
 - template: Git/Task_Clean.yaml@templates
+
+(or without the @templates postfix if the files exist locally)
+
 ```
 variables:
   shouldDeploy: ${{eq(variables['Build.SourceBranch'], 'refs/heads/master')}}

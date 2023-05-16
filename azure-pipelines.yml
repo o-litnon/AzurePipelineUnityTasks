@@ -7,9 +7,9 @@ trigger:
 resources:
   repositories:
     - repository: templates
-      type: github
-      name: o-litnon/AzurePipelineUnityTasks
-      ref: refs/tags/1.0.0
+      type: git
+      name: AzurePipelineUnityTasks
+      ref: refs/heads/main
 
 variables:
   shouldDeploy: ${{eq(variables['Build.SourceBranch'], 'refs/heads/master')}}
