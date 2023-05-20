@@ -23,7 +23,7 @@ resources:
       ref: refs/heads/main
 ```
 
-Step 5: Reference the remplates by using the name of the resource repository 
+Step 5: Reference the templates by using the name of the resource repository 
 - template: Git/Task_Clean.yaml@templates
 
 (or without the @templates postfix if the files exist locally)
