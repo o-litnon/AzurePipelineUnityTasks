@@ -2,6 +2,14 @@
 
 This collection of unity tasks adds CI/CD tooling for use in Azure Pipelines on Azure DevOps when working with [Unity](https://www.unity3d.com) projects.
 
+Works for all Azure agents:
+
+- Windows_NT
+- Darwin
+- Linux
+
+The base commands execute using the [UnityHub](https://docs.unity3d.com/2020.1/Documentation/Manual/GettingStartedUnityHub.html) CLI and [UnityEditor CLI](https://docs.unity3d.com/Manual/CommandLineArguments.html). All Unity command variables can be found in the official documentation for your particular install.
+
 # Get Started
 Example  pipeline:
 - ./azure-pipeline.yml 
