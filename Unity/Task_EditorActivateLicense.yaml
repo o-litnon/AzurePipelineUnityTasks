@@ -1,0 +1,29 @@
+parameters:
+  - name: displayName
+    type: string
+    default: "Unity Activate License"
+  - name: unityVersion
+    type: string
+  - name: unityProjectPath
+    type: string
+    default: null
+  - name: os
+    type: string
+    default: win
+  - name: username
+    type: string
+  - name: password
+    type: string
+  - name: serial 
+    type: string
+
+steps:
+  - template: Task_EditorCmd.yaml
+    parameters:
+      displayName: ${{parameters.displayName}}
+      os: ${{parameters.os}}
+      unityVersion: ${{parameters.unityVersion}}
+      ${{ if eq(parameters.unityProjectPath, 'null') }}:
+        cmdArgs: "-nographics -username \"${{parameters.username}}\" -password \"${{parameters.password}}\" -serial \"${{parameters.serial}}\" -projectPath \"$(Build.SourcesDirectory)\" -quit"
+      ${{ else }}:
+        cmdArgs: "-nographics -username \"${{parameters.username}}\" -password \"${{parameters.password}}\" -serial \"${{parameters.serial}}\" -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -quit"
