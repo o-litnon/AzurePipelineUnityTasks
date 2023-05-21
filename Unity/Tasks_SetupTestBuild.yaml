@@ -38,6 +38,9 @@ steps:
         unityVersion: $(projectVersion)
         os: ${{parameters.os}}
         unityProjectPath: ${{parameters.projectPath}}
+        testPlatform:
+          - EditMode
+          - PlayMode
   - ${{ if parameters.shouldBuild }}:
     - template: Task_EditorBuildScript.yaml
       parameters:

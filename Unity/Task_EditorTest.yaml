@@ -10,15 +10,20 @@ parameters:
   - name: os
     type: string
     default: win
+  - name: testPlatform
+    type: object
+    default: 
+    - EditMode
 
 steps:
-  - template: Task_EditorCmd.yaml
-    parameters:
-      displayName: ${{parameters.displayName}}
-      os: ${{parameters.os}}
-      unityVersion: ${{parameters.unityVersion}}
-      ${{ if eq(parameters.unityProjectPath, 'null') }}:
-        cmdArgs: "-runTests -testPlatform EditMode -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath -noGraphics"
-      ${{ else }}:
-        cmdArgs: "-runTests -testPlatform EditMode -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath -noGraphics"
+  - ${{ each platform in parameters.testPlatform }}:
+    - template: Task_EditorCmd.yaml
+      parameters:
+        displayName: "${{parameters.displayName}} - ${{platform}}"
+        os: ${{parameters.os}}
+        unityVersion: ${{parameters.unityVersion}}
+        ${{ if eq(parameters.unityProjectPath, 'null') }}:
+          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath -noGraphics"
+        ${{ else }}:
+          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath -noGraphics"
 
