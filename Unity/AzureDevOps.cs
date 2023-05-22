@@ -9,8 +9,8 @@ using UnityEditor.Build.Reporting;
 
 public class AzureDevOps
 {
-    private static string outputFileName = "${{parameters.outputFileName}}";
-    private static string locationPathName = "${{parameters.outputPath}}";
+    private static string outputFileName = @"${{parameters.outputFileName}}";
+    private static string locationPathName = @"$(Build.SourcesDirectory)/${{parameters.outputPath}}";
 
     public static void PerformBuild()
     {
@@ -18,7 +18,7 @@ public class AzureDevOps
         {
             EditorBuildSettingsScene[] editorConfiguredBuildScenes = EditorBuildSettings.scenes;
             string[] includedScenes = new string[editorConfiguredBuildScenes.Length];
-        
+
             for (int i = 0; i < editorConfiguredBuildScenes.Length; i++)
             {
                 includedScenes[i] = editorConfiguredBuildScenes[i].path;
@@ -38,7 +38,7 @@ public class AzureDevOps
                 targetGroup = EditorUserBuildSettings.selectedBuildTargetGroup,
                 options = BuildOptions.None
             });
-        
+
 #if UNITY_2018_1_OR_NEWER
             switch (buildReport.summary.result)
             {
@@ -69,7 +69,7 @@ public class AzureDevOps
             EditorApplication.Exit(1);
         }
     }
-    
+
     private static string GetBuildTargetOutputFileNameAndExtension()
     {
         switch (EditorUserBuildSettings.activeBuildTarget)
@@ -95,7 +95,7 @@ public class AzureDevOps
             case BuildTarget.StandaloneLinux64:
             case BuildTarget.StandaloneLinuxUniversal:
 #if !UNITY_2018_3_OR_NEWER
-            case BuildTarget.PSP2:    
+            case BuildTarget.PSP2:
 #endif
             case BuildTarget.PS4:
             case BuildTarget.XboxOne:
