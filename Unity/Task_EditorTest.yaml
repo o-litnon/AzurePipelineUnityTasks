@@ -23,7 +23,6 @@ steps:
         os: ${{parameters.os}}
         unityVersion: ${{parameters.unityVersion}}
         ${{ if eq(parameters.unityProjectPath, 'null') }}:
-          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath -noGraphics"
+          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath"
         ${{ else }}:
-          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath -noGraphics"
-
+          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath"
