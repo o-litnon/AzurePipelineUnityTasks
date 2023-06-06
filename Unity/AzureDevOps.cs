@@ -10,7 +10,7 @@ using UnityEditor.Build.Reporting;
 public class AzureDevOps
 {
     private static string outputFileName = @"${{parameters.outputFileName}}";
-    private static string locationPathName = @"$(Build.SourcesDirectory)/${{parameters.outputPath}}";
+    private static string locationPathName = @"${{parameters.outputPath}}";
 
     public static void PerformBuild()
     {

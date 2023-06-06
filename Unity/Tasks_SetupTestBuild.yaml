@@ -39,13 +39,18 @@ steps:
         os: ${{parameters.os}}
         unityProjectPath: ${{parameters.projectPath}}
         testPlatform:
-          - EditMode
+          - EditMode -nographics
           - PlayMode
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
         testResultsFormat: 'NUnit' # 'JUnit' | 'NUnit' | 'VSTest' | 'XUnit' | 'CTest'. Alias: testRunner. Required. Test result format. Default: JUnit.
         testResultsFiles: '**/TestResults-*.xml'
+    - task: PublishCodeCoverageResults@1
+      condition: succeededOrFailed()
+      inputs:
+        codeCoverageTool: 'Cobertura' # 'Cobertura' | 'JaCoCo'. Required. Code coverage tool. Default: JaCoCo.
+        summaryFileLocation: '**/Cobertura.xml'
   - ${{ if parameters.shouldBuild }}:
     - template: Task_EditorBuildScript.yaml
       parameters:

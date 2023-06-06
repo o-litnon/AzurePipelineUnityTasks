@@ -13,7 +13,7 @@ parameters:
   - name: testPlatform
     type: object
     default: 
-    - EditMode
+    - EditMode -nographics
 
 steps:
   - ${{ each platform in parameters.testPlatform }}:
@@ -23,6 +23,6 @@ steps:
         os: ${{parameters.os}}
         unityVersion: ${{parameters.unityVersion}}
         ${{ if eq(parameters.unityProjectPath, 'null') }}:
-          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath"
+          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)\" -forgetProjectPath -enableCodeCoverage -debugCodeOptimization -coverageOptions \"generateAdditionalReports;dontClear\""
         ${{ else }}:
-          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath"
+          cmdArgs: "-runTests -testPlatform ${{platform}} -projectPath \"$(Build.SourcesDirectory)/${{parameters.unityProjectPath}}\" -forgetProjectPath -enableCodeCoverage -debugCodeOptimization -coverageOptions \"generateAdditionalReports;dontClear\""
