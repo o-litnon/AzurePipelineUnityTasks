@@ -10,10 +10,13 @@ Works for all Azure agents:
 
 The base commands execute using the [UnityHub](https://docs.unity3d.com/2020.1/Documentation/Manual/GettingStartedUnityHub.html) CLI and [UnityEditor CLI](https://docs.unity3d.com/Manual/CommandLineArguments.html). All Unity command variables can be found in the official documentation for your particular install.
 
-# Get Started
-Example  pipeline:
-- ./azure-pipeline.yml 
+If [code coverage](https://docs.unity3d.com/Packages/com.unity.testtools.codecoverage@1.2/manual/index.html) is installed in your project:
+- The [EditorTest](Unity/Task_EditorTest.yaml) Task includes arguments for capturing the coverage results.
+- [After](Unity/Tasks_SetupTestBuild.yaml) the tests are concluded:
+  - The results will be [published](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-test-results-v2).
+  - The coverage will be [published](https://learn.microsoft.com/en-us/azure/devops/pipelines/tasks/reference/publish-code-coverage-results-v2).
 
+# Get Started
 Step 1: [Clone](https://learn.microsoft.com/en-us/azure/devops/repos/git/clone) this repo into your Azure project so you can reference it easily in your pipeline. You could optionally copy the files directly into your repository and skip Step 4.
 
 Step 2: Install [UnityHub](https://docs.unity3d.com/2020.1/Documentation/Manual/GettingStartedInstallingHub.html) on your build agents
@@ -32,10 +35,14 @@ resources:
 ```
 
 Step 5: Reference the templates by using the name of the resource repository 
-- template: Git/Task_Clean.yaml@templates
+- template: [Git/Task_Clean.yaml](Git/Task_Clean.yaml)@templates
 
 (or without the @templates postfix if the files exist locally)
 
+# Example
+Example [pipeline](azure-pipelines.yml) using:
+- [Git/Task_Clean.yaml](Git/Task_Clean.yaml)
+- [Unity/Tasks_SetupTestBuild.yaml](Unity/Tasks_SetupTestBuild.yaml)
 ```
 variables:
   projectPath: path/to/project
@@ -73,4 +80,4 @@ stages:
             - windows-il2cpp
 ```
 
-![Alt text](Example.png)
+![Example](Example.png)
