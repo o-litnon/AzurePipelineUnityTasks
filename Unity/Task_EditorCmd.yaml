@@ -9,23 +9,35 @@ parameters:
   - name: os
     type: string
     default: "win"
+  - name: condition
+    type: string
+    default: succeeded()
+  - name: continueOnError
+    type: boolean
+    default: false
 
 steps:
   - ${{ if eq(parameters.os,'win')}}:
       - template: ../Utils/Task_Execute.yaml
         parameters:
+          continueOnError: ${{parameters.continueOnError}}
+          condition: ${{parameters.condition}}
           displayName: ${{parameters.displayName}}
           cmdPath: "C:/Program Files/Unity/Hub/Editor/${{parameters.unityVersion}}/Editor/Unity.exe"
           cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"
   - ${{ elseif eq(parameters.os,'mac') }}:
       - template: ../Utils/Task_Execute.yaml
         parameters:
+          continueOnError: ${{parameters.continueOnError}}
+          condition: ${{parameters.condition}}
           displayName: ${{parameters.displayName}}
           cmdPath: "/Applications/Unity/Hub/Editor/${{parameters.unityVersion}}/Unity.app/Contents/MacOS/Unity"
           cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"
   - ${{ else }}:
       - template: ../Utils/Task_Execute.yaml
         parameters:
+          continueOnError: ${{parameters.continueOnError}}
+          condition: ${{parameters.condition}}
           displayName: ${{parameters.displayName}}
           cmdPath: "/Applications/Unity/Hub/Editor/${{parameters.unityVersion}}/Unity.app/Contents/Linux/Unity"
           cmdArgs: "-logFile - -batchmode ${{parameters.cmdArgs}}"

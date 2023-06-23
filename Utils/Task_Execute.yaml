@@ -8,11 +8,15 @@ parameters:
   - name: condition
     type: string
     default: succeeded()
+  - name: continueOnError
+    type: boolean
+    default: false
 
 steps:
   - ${{ if endsWith(parameters.cmdPath, '.exe') }}:
       - task: CmdLine@2
         displayName: ${{parameters.displayName}}
+        continueOnError: and(true, ${{parameters.continueOnError}})
         condition: ${{parameters.condition}}
         inputs:
           script: |
@@ -20,6 +24,7 @@ steps:
   - ${{ elseif endsWith(parameters.cmdPath, '.bat') }}:
       - task: CmdLine@2
         displayName: ${{parameters.displayName}}
+        continueOnError: ${{parameters.continueOnError}}
         condition: ${{parameters.condition}}
         inputs:
           script: |
@@ -27,6 +32,7 @@ steps:
   - ${{ else }}:
       - task: PowerShell@2
         displayName: ${{parameters.displayName}}
+        continueOnError: ${{parameters.continueOnError}}
         condition: ${{parameters.condition}}
         inputs:
           targetType: "inline"

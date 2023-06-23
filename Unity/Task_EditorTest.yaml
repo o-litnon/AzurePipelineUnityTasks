@@ -10,6 +10,12 @@ parameters:
   - name: os
     type: string
     default: win
+  - name: condition
+    type: string
+    default: succeeded()
+  - name: continueOnError
+    type: boolean
+    default: false
   - name: testPlatform
     type: object
     default: 
@@ -19,6 +25,8 @@ steps:
   - ${{ each platform in parameters.testPlatform }}:
     - template: Task_EditorCmd.yaml
       parameters:
+        continueOnError: ${{parameters.continueOnError}}
+        condition: ${{parameters.condition}}
         displayName: "${{parameters.displayName}} - ${{platform}}"
         os: ${{parameters.os}}
         unityVersion: ${{parameters.unityVersion}}
