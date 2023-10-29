@@ -16,7 +16,7 @@ steps:
   - ${{ if endsWith(parameters.cmdPath, '.exe') }}:
       - task: CmdLine@2
         displayName: ${{parameters.displayName}}
-        continueOnError: and(true, ${{parameters.continueOnError}})
+        continueOnError: ${{parameters.continueOnError}}
         condition: ${{parameters.condition}}
         inputs:
           script: |
