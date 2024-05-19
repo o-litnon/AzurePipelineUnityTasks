@@ -32,6 +32,7 @@ steps:
       unityVersionRevision: $(projectVersionRevision)
       os: ${{parameters.os}}
       modules: ${{parameters.modules}}
+      continueOnError: true
   - ${{ if parameters.shouldTest }}:
     - template: Task_EditorTest.yaml
       parameters:
@@ -40,6 +41,13 @@ steps:
         unityProjectPath: ${{parameters.projectPath}}
         testPlatform:
           - EditMode -nographics
+    - template: Task_EditorTest.yaml
+      parameters:
+        condition: and(succeeded(), contains(variables['Build.SourceVersionMessage'], '[PlayMode]'))
+        unityVersion: $(projectVersion)
+        os: ${{parameters.os}}
+        unityProjectPath: ${{parameters.projectPath}}
+        testPlatform:
           - PlayMode
     - task: PublishTestResults@2
       condition: succeededOrFailed()

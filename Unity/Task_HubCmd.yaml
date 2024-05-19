@@ -7,23 +7,29 @@ parameters:
   - name: os
     type: string
     default: win
+  - name: continueOnError
+    type: boolean
+    default: false
 
 steps:
   - ${{ if eq(parameters.os,'win')}}:
       - template: ../Utils/Task_Execute.yaml
         parameters:
+          continueOnError: ${{parameters.continueOnError}}
           displayName: ${{parameters.displayName}}
           cmdPath: 'C:\Program Files\Unity Hub\Unity Hub.exe'
           cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
   - ${{ elseif eq(parameters.os,'mac') }}:
       - template: ../Utils/Task_Execute.yaml
         parameters:
+          continueOnError: ${{parameters.continueOnError}}
           displayName: ${{parameters.displayName}}
           cmdPath: "/Applications/Unity Hub.app/Contents/MacOS/Unity Hub"
           cmdArgs: "-- --headless ${{parameters.cmdArgs}}"
   - ${{ else }}:
       - template: ../Utils/Task_Execute.yaml
         parameters:
+          continueOnError: ${{parameters.continueOnError}}
           displayName: ${{parameters.displayName}}
           cmdPath: "/Applications/Unity Hub.app/Contents/Linux/Unity Hub"
           cmdArgs: "-- --headless ${{parameters.cmdArgs}}"

@@ -12,16 +12,21 @@ parameters:
   - name: modules
     type: object
     default: []
+  - name: continueOnError
+    type: boolean
+    default: false
 
 steps:
   - template: Task_HubCmd.yaml
     parameters:
+      continueOnError: ${{parameters.continueOnError}}
       displayName: ${{parameters.displayName}}
       os: ${{parameters.os}}
       cmdArgs: "install --version ${{parameters.unityVersion}} --changeset ${{parameters.unityVersionRevision}}"
   - ${{ each module in parameters.modules }}:
     - template: Task_HubCmd.yaml
       parameters:
+        continueOnError: ${{parameters.continueOnError}}
         displayName: "${{parameters.displayName}} - ${{module}}"
         os: ${{parameters.os}}
         cmdArgs: "install-modules --version ${{parameters.unityVersion}} --childModules --module ${{module}}"
